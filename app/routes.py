@@ -4,6 +4,7 @@ from datetime import date
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from app.metrics import EXPENSES_CREATED
 from app.models import Expenses
 
 router = APIRouter()
@@ -48,6 +49,8 @@ async def add_expenses(data: dict):
         )
     except KeyError as e:
         raise HTTPException(status_code=400, detail=f"Missing field: {e.args[0]}")
+
+    EXPENSES_CREATED.inc()
 
     return {"id": expense.id, "message": "Expense created"}
 

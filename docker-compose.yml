@@ -34,5 +34,15 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - app
+
 volumes:
   postgres_data:
