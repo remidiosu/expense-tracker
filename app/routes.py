@@ -17,10 +17,11 @@ async def get_expenses():
             "amount": e.amount,
             "category": e.category,
             "description": e.description,
-            "date": e.date.isoformat()
+            "date": e.date.isoformat(),
         }
         for e in expenses
     ]
+
 
 @router.get("/expenses/stats")
 async def get_stats():
@@ -32,33 +33,30 @@ async def get_stats():
     for e in expenses:
         by_cat[e.category] = by_cat.get(e.category, 0) + e.amount
 
-    return {
-        "total": total,
-        "by_category": by_cat
-    }
+    return {"total": total, "by_category": by_cat}
 
 
 @router.post("/expenses")
 async def add_expenses(data: dict):
     try:
         expense = await Expenses.create(
-            amount=data['amount'], 
-            category=data['category'],
+            amount=data["amount"],
+            category=data["category"],
             description=data.get("description"),
-            date=data["date"]
+            date=data["date"],
         )
     except KeyError as e:
         raise HTTPException(status_code=400, detail=f"Missing field: {e.args[0]}")
 
-    return {'id': expense.id, 'message':'Expense created'}
+    return {"id": expense.id, "message": "Expense created"}
 
 
-@router.put('/expenses/{id}')
+@router.put("/expenses/{id}")
 async def update_expense(expense_id: int, data: dict):
     expense = await Expenses.get_or_none(id=expense_id)
     if not expense:
         raise HTTPException(status_code=404, detail="Expense not found")
-    
+
     expense.amount = data.get("amount", expense.amount)
     expense.category = data.get("category", expense.category)
     expense.description = data.get("description", expense.description)
@@ -69,6 +67,7 @@ async def update_expense(expense_id: int, data: dict):
 
 
 from fastapi import Path
+
 
 @router.delete("/expenses/{expense_id}")
 async def delete_expense(expense_id: int = Path(...)):
@@ -82,8 +81,8 @@ async def delete_expense(expense_id: int = Path(...)):
 
 @router.get("/expenses")
 async def get_expenses_f(
-    start: date = Query(None), 
-    end: date = Query(None), 
+    start: date = Query(None),
+    end: date = Query(None),
 ):
     q = Expenses.all()
 
@@ -100,7 +99,7 @@ async def get_expenses_f(
             "amount": e.amount,
             "category": e.category,
             "description": e.description,
-            "date": e.date.isoformat()
+            "date": e.date.isoformat(),
         }
         for e in expenses
     ]
