@@ -1,10 +1,11 @@
-from fastapi import FastAPI
-from fastapi.security import HTTPBearer
 from contextlib import asynccontextmanager
 
+from fastapi import FastAPI
+from fastapi.security import HTTPBearer
 from prometheus_client import start_http_server
-from app.routes import router
+
 from app.db import init_db
+from app.routes import router
 
 
 @asynccontextmanager

@@ -1,6 +1,7 @@
 import os
-from tortoise import Tortoise
+
 from dotenv import load_dotenv
+from tortoise import Tortoise
 
 load_dotenv()
 
